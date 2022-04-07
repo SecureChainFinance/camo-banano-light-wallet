@@ -1,6 +1,6 @@
-# camo-banano-light-wallet
+# camo-paw-light-wallet
 
-light wallet for banano that supports camo transactions
+light wallet for PAW digital that supports camo transactions
 
 # instructions on basic usage:
 
