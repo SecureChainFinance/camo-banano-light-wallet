@@ -4,8 +4,8 @@
     "es": "Español"
   },
   "title": {
-    "en": "Camo Banano",
-    "es": "Banano de Camu"
+    "en": "Camo Paw",
+    "es": "Paw de Camu"
   },
   "home": {
     "en": "Home",
@@ -39,9 +39,9 @@
     "en": "Download Example Excel Document",
     "es": "Descargue un documento Excel de ejemplo"
   },
-  "selectFileWithAccountAndAmountOfBananos": {
-    "en": "Select File With Account And Amount Of Bananos",
-    "es": "Seleccione Archivo con cuenta y cantidad de bananos"
+  "selectFileWithAccountAndAmountOfPaws": {
+    "en": "Select File With Account And Amount Of Paws",
+    "es": "Seleccione Archivo con cuenta y cantidad de paws"
   },
   "sendToAccount": {
     "en": "Send To Account",

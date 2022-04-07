@@ -11,8 +11,8 @@ const ExcelJS = require('exceljs');
 // functions
 const createExampleWorkbookBase64 = async () => {
   const workbook = new ExcelJS.Workbook();
-  workbook.creator = 'Camo Banano';
-  workbook.lastModifiedBy = 'Camo Banano';
+  workbook.creator = 'Camo Paw';
+  workbook.lastModifiedBy = 'Camo Paw';
   workbook.created = new Date();
   workbook.modified = new Date();
   workbook.lastPrinted = new Date();
@@ -23,8 +23,8 @@ const createExampleWorkbookBase64 = async () => {
     {header: 'Account', key: 'account', width: 64},
     {header: 'Amount', key: 'amount', width: 32},
   ];
-  worksheet.getRow(1).values = ['Account', 'Amount Bananos'];
-  worksheet.getRow(2).values = ['ban_1bananobh5rat99qfgt1ptpieie5swmoth87thi74qgbfrij7dcgjiij94xr', 16266];
+  worksheet.getRow(1).values = ['Account', 'Amount Paws'];
+  worksheet.getRow(2).values = ['paw_1bananobh5rat99qfgt1ptpieie5swmoth87thi74qgbfrij7dcgjiij94xr', 16266];
 
   const encodedBuffer = await workbook.xlsx.writeBuffer();
   const encodedBase64 = encodedBuffer.toString('base64');

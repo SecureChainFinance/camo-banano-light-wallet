@@ -9,7 +9,7 @@ const mainConsoleLib = require('console');
 const Store = require('electron-store');
 const Conf = require('conf');
 
-const bananojsErrorTrap = require('./util/pawjs-error-trap-util.js');
+const pawjsErrorTrap = require('./util/pawjs-error-trap-util.js');
 const accountUtil = require('./util/account-util.js');
 const backgroundUtil = require('./util/background-util.js');
 const sendToListUtil = require('./util/send-to-list-util.js');
@@ -39,8 +39,8 @@ const NETWORKS = [{
 },
 // , {
 //   NAME: 'Error Testnet',
-//   EXPLORER: 'https://creeper.banano.cc/',
-//   RPC_URL: bananojsErrorTrap.getErrorUrl(),
+//   EXPLORER: 'https://tracker.paw.digital/',
+//   RPC_URL: pawjsErrorTrap.getErrorUrl(),
 // }
 ];
 
@@ -172,7 +172,7 @@ const init = async () => {
   /* eslint-disable no-invalid-this */
   pawjsErrorTrap.setApp(this);
   /* eslint-enable no-invalid-this */
-  pawjsErrorTrap.setBananodeApiUrl(getRpcUrl());
+  pawjsErrorTrap.setPawnodeApiUrl(getRpcUrl());
   await requestLedgerDeviceInfo();
 
   setImmediate(autoRecieve);
@@ -184,7 +184,7 @@ const getCamoRepresentative = () => {
   }
   const privateKey = pawjsErrorTrap.getPrivateKey(seed, 0);
   if (privateKey) {
-    const camoPublicKey = bananojsErrorTrap.getCamoPublicKey(privateKey);
+    const camoPublicKey = pawjsErrorTrap.getCamoPublicKey(privateKey);
     return pawjsErrorTrap.getCamoAccount(camoPublicKey);
   } else {
     return undefined;
@@ -280,7 +280,7 @@ const show = (id) => {
 };
 
 const useLedger = async () => {
-  bananojsErrorTrap.setUseLedgerFlag(true);
+  pawjsErrorTrap.setUseLedgerFlag(true);
   isLoggedIn = true;
   try {
     await setAccountDataFromSeed();
@@ -308,7 +308,7 @@ const setAccountDataFromSeed = async () => {
 };
 
 const getAccountDataFromSeed = async () => {
-  bananojsErrorTrap.setUseLedgerFlag(false);
+  pawjsErrorTrap.setUseLedgerFlag(false);
   isLoggedIn = true;
   show('seed');
   const seedElt = appDocument.getElementById('seed');
@@ -360,7 +360,7 @@ const reuseSeed = async () => {
       success = false;
       showAlert('no seed found in seed storage, storage may not have been initialized.');
     } else {
-      bananojsErrorTrap.setUseLedgerFlag(false);
+      pawjsErrorTrap.setUseLedgerFlag(false);
       isLoggedIn = true;
       show('seed');
       success = true;
@@ -410,13 +410,13 @@ const updateRepresentative = async () => {
     const newRepresentative = newRepresentativeElt.value;
     mainConsole.debug('STARTED updateRepresentative newRepresentative',
         newRepresentative);
-    const newRepPublicKey = bananojsErrorTrap.getAccountPublicKey(newRepresentative);
+    const newRepPublicKey = pawjsErrorTrap.getAccountPublicKey(newRepresentative);
     mainConsole.debug('STARTED updateRepresentative newRepPublicKey',
         newRepPublicKey);
-    const newBanRepresentative = bananojsErrorTrap.getAccount(newRepPublicKey);
+    const newBanRepresentative = pawjsErrorTrap.getAccount(newRepPublicKey);
     mainConsole.debug('STARTED updateRepresentative newBanRepresentative',
         newBanRepresentative);
-    const response = await bananojsErrorTrap.changeBananoRepresentativeForSeed(seed, 0, newBanRepresentative);
+    const response = await pawjsErrorTrap.changePawRepresentativeForSeed(seed, 0, newBanRepresentative);
     showAlert(response);
   } catch (error) {
     mainConsole.trace('updateRepresentative', error);
@@ -468,7 +468,7 @@ const sendAmountToAccount = async () => {
     }
 
     let message = undefined;
-    if (bananojsErrorTrap.getRawStrFromBananoStr(sendAmount) == '0') {
+    if (pawjsErrorTrap.getRawStrFromPawStr(sendAmount) == '0') {
       message = 'error:cannot send 0';
     } else {
       try {
@@ -507,7 +507,7 @@ const requestTransactionHistory = async () => {
     return;
   }
   updateLocalizedPleaseWaitStatus('gettingTransactionHistory', '.');
-  bananojsErrorTrap.setBananodeApiUrl(getRpcUrl());
+  pawjsErrorTrap.setPawnodeApiUrl(getRpcUrl());
   parsedTransactionHistoryByAccount.length = 0;
   for (let accountDataIx = 0; accountDataIx < accountData.length; accountDataIx++) {
     updateLocalizedPleaseWaitStatus('gettingTransactionHistory',
@@ -524,7 +524,7 @@ const requestTransactionHistory = async () => {
         const parsedTransactionHistoryElt = {};
         parsedTransactionHistoryElt.type = historyElt.type;
         parsedTransactionHistoryElt.n = ix + 1;
-        parsedTransactionHistoryElt.value = pawjsErrorTrap.getPawPartsFromRaw(historyElt.amount).banano;
+        parsedTransactionHistoryElt.value = pawjsErrorTrap.getPawPartsFromRaw(historyElt.amount).paw;
         parsedTransactionHistoryElt.txHash = historyElt.hash;
         parsedTransactionHistoryElt.txDetailsUrl = 'https://tracker.paw.digital/explorer/block/' + historyElt.hash;
         parsedTransactionHistoryByAccount.push(parsedTransactionHistoryElt);
@@ -542,7 +542,7 @@ const requestBalanceAndRepresentative = async () => {
     return;
   }
   updateLocalizedPleaseWaitStatus('gettingAccountInfo', '.');
-  bananojsErrorTrap.setPawnodeApiUrl(getRpcUrl());
+  pawjsErrorTrap.setPawnodeApiUrl(getRpcUrl());
   totalBalance = 0;
   for (let accountDataIx = 0; accountDataIx < accountData.length; accountDataIx++) {
     updateLocalizedPleaseWaitStatus('gettingAccountInfo',
@@ -559,7 +559,7 @@ const requestBalanceAndRepresentative = async () => {
         accountDataElt.balance = undefined;
       } else {
         balanceStatus = 'Success';
-        accountDataElt.balance = pawjsErrorTrap.getPawPartsFromRaw(accountInfo.balance).banano;
+        accountDataElt.balance = pawjsErrorTrap.getPawPartsFromRaw(accountInfo.balance).paw;
         accountDataElt.representative = accountInfo.representative;
         totalBalance += parseInt(accountDataElt.balance);
       }
@@ -579,8 +579,8 @@ const requestBlockchainState = async () => {
     return;
   }
   updateLocalizedPleaseWaitStatus('gettingBlockchainState');
-  bananojsErrorTrap.setBananodeApiUrl(getRpcUrl());
-  const blockCount = await bananojsErrorTrap.getBlockCount();
+  pawjsErrorTrap.setPawnodeApiUrl(getRpcUrl());
+  const blockCount = await pawjsErrorTrap.getBlockCount();
   if (blockCount) {
     blockchainState.count = blockCount.count;
   } else {
@@ -633,7 +633,7 @@ const hideEverything = () => {
   hide('pending');
   hide('seed-login');
   hide('ledger-login');
-  hide('camo-banano-branding');
+  hide('camo-paw-branding');
   hide('send-spacer-01');
   hide('private-key-generate');
   hide('private-key-generator');
@@ -655,7 +655,7 @@ const showLogin = () => {
   show('seed-login');
   show('seed-reuse');
   show('ledger-login');
-  show('camo-banano-branding');
+  show('camo-paw-branding');
   show('private-key-generate');
   isLoggedIn = false;
 };
@@ -669,7 +669,7 @@ const showHome = () => {
   show('transaction-list-small');
   show('your-account');
   show('your-representative');
-  show('camo-banano-branding');
+  show('camo-paw-branding');
   selectButton('home');
 };
 
@@ -834,18 +834,18 @@ const addAccountToBook = () => {
     }
   };
 
-  const camoAccountValid = bananojsErrorTrap.getCamoAccountValidationInfo(newBookAccount);
+  const camoAccountValid = pawjsErrorTrap.getCamoAccountValidationInfo(newBookAccount);
   // showAlert(JSON.stringify(camoAccountValid));
   if (camoAccountValid.valid) {
     try {
-      const publicKey = bananojsErrorTrap.getAccountPublicKey(newBookAccount);
-      const account = bananojsErrorTrap.getAccount(publicKey);
+      const publicKey = pawjsErrorTrap.getAccountPublicKey(newBookAccount);
+      const account = pawjsErrorTrap.getAccount(publicKey);
       pushAndStore(account);
     } catch (error) {
       showAlert(error.message);
     }
   } else {
-    const accountValid = bananojsErrorTrap.getAccountValidationInfo(newBookAccount);
+    const accountValid = pawjsErrorTrap.getAccountValidationInfo(newBookAccount);
     // showAlert(JSON.stringify(accountValid));
     if (accountValid.valid) {
       pushAndStore(newBookAccount);
@@ -878,7 +878,7 @@ const clearGlobalData = () => {
   accountData.length = 0;
 
 
-  bananojsErrorTrap.setUseLedgerFlag(false);
+  pawjsErrorTrap.setUseLedgerFlag(false);
   generatedSeedHex = undefined;
   seed = undefined;
 
@@ -912,7 +912,7 @@ const setAppDocument = (_document) => {
 };
 
 const requestLedgerDeviceInfo = async () => {
-  ledgerDeviceInfo = await bananojsErrorTrap.getLedgerInfo();
+  ledgerDeviceInfo = await pawjsErrorTrap.getLedgerInfo();
   // mainConsole.log('requestLedgerDeviceInfo', ledgerDeviceInfo);
 };
 
@@ -1004,7 +1004,7 @@ const requestCamoSharedAccount = async () => {
         const seedIx = 0;
         let sharedSeedIx = 0;
         while (hasMoreHistory) {
-          const newCamoSharedAccountData = await bananojsErrorTrap.getCamoSharedAccountData(seed, seedIx, sendToAccount, sharedSeedIx);
+          const newCamoSharedAccountData = await pawjsErrorTrap.getCamoSharedAccountData(seed, seedIx, sendToAccount, sharedSeedIx);
           mainConsole.debug('requestCamoSharedAccount camoSharedAccountData', camoSharedAccountData);
           if (newCamoSharedAccountData) {
             const camoSharedAccountDataElt = {};
@@ -1044,7 +1044,7 @@ const requestCamoSharedAccountBalance = async () => {
 
     if (camoSharedAccountDataElt.account) {
       if (camoSharedAccountDataElt.account.length > 0) {
-        const accountInfo = await bananojsErrorTrap.getAccountInfo(camoSharedAccountDataElt.account, true);
+        const accountInfo = await pawjsErrorTrap.getAccountInfo(camoSharedAccountDataElt.account, true);
         balanceStatus = JSON.stringify(accountInfo);
         mainConsole.debug('requestCamoSharedAccountBalance accountInfo', accountInfo);
         if (accountInfo) {
@@ -1054,7 +1054,7 @@ const requestCamoSharedAccountBalance = async () => {
             camoSharedAccountDataElt.balance = undefined;
           } else {
             balanceStatus = 'Success';
-            camoSharedAccountDataElt.balance = bananojsErrorTrap.getBananoPartsFromRaw(accountInfo.balance).banano;
+            camoSharedAccountDataElt.balance = pawjsErrorTrap.getPawPartsFromRaw(accountInfo.balance).paw;
             camoSharedAccountDataElt.representative = accountInfo.representative;
             totalCamoBalance += parseInt(camoSharedAccountDataElt.balance);
           }
@@ -1131,7 +1131,7 @@ const requestCamoPending = async () => {
               hasMoreHistoryOrPending = false;
             }
             mainConsole.debug('requestCamoPending hasHistory', hasHistory);
-            const response = await bananojsErrorTrap.camoGetAccountsPending(seed, accountDataElt.seedIx, sendToAccount, sharedSeedIx, 10);
+            const response = await pawjsErrorTrap.camoGetAccountsPending(seed, accountDataElt.seedIx, sendToAccount, sharedSeedIx, 10);
             mainConsole.debug('requestCamoPending response', response);
             if (response) {
               if (response.blocks) {
@@ -1147,7 +1147,7 @@ const requestCamoPending = async () => {
                     }
                     hashes.forEach((hash, hashIx) => {
                       const raw = hashMap[hash];
-                      const bananoParts = bananojsErrorTrap.getBananoPartsFromRaw(raw);
+                      const pawParts = pawjsErrorTrap.getPawPartsFromRaw(raw);
                       const camoPendingBlock = {};
                       camoPendingBlock.n = camoPendingBlocks.length + 1;
                       if (firstHashForSendToAccount) {
@@ -1155,8 +1155,8 @@ const requestCamoPending = async () => {
                         camoPendingBlock.firstHashForSendToAccount = true;
                       }
                       camoPendingBlock.hash = hash;
-                      camoPendingBlock.banano = pawParts.paw;
-                      camoPendingBlock.banoshi = pawParts.pawoshi;
+                      camoPendingBlock.paw = pawParts.paw;
+                      camoPendingBlock.pawoshi = pawParts.pawoshi;
                       camoPendingBlock.raw = pawParts.raw;
                       camoPendingBlock.totalRaw = raw;
                       camoPendingBlock.detailsUrl = 'https://tracker.paw.digital/explorer/block/' + hash;
@@ -1167,7 +1167,7 @@ const requestCamoPending = async () => {
                       camoPendingBlocks.push(camoPendingBlock);
                       mainConsole.debug('camoPendingBlocks camoPendingBlock', camoPendingBlock);
 
-                      totalCamoPendingBalance += parseInt(camoPendingBlock.banano);
+                      totalCamoPendingBalance += parseInt(camoPendingBlock.paw);
                     });
                   }
                 });
@@ -1197,7 +1197,7 @@ const receivePending = async (hash, seedIx) => {
   try {
     const representative = getAccountRepresentative();
     if (representative) {
-      const response = await bananojsErrorTrap.receiveDepositsForSeed(seed, seedIx, representative, hash);
+      const response = await pawjsErrorTrap.receiveDepositsForSeed(seed, seedIx, representative, hash);
       mainConsole.debug('receivePending receiveDepositsForSeed', response);
       if (response) {
         showAlert(`${response.pendingMessage},${response.receiveMessage}`);
@@ -1224,7 +1224,7 @@ const getCamoAccount = () => {
     return undefined;
   }
   if (accountData.length > 0) {
-    return bananojsErrorTrap.getCamoAccount(accountData[0].publicKey);
+    return pawjsErrorTrap.getCamoAccount(accountData[0].publicKey);
   }
 };
 
@@ -1247,15 +1247,15 @@ const requestPending = async () => {
         const hashes = [...Object.keys(hashMap)];
         hashes.forEach((hash, hashIx) => {
           const raw = hashMap[hash].amount;
-          const bananoParts = pawjsErrorTrap.getPawPartsFromRaw(raw);
+          const pawParts = pawjsErrorTrap.getPawPartsFromRaw(raw);
           const pendingBlock = {};
           pendingBlock.sourceAccount = hashMap[hash].source;
           pendingBlock.n = pendingBlocks.length + 1;
           pendingBlock.hash = hash;
           pendingBlock.detailsUrl = 'https://tracker.paw.digital/explorer/block/' + hash;
           pendingBlock.seedIx = accountDataElt.seedIx;
-          pendingBlock.banano = pawParts.banano;
-          pendingBlock.banoshi = pawParts.pawoshi;
+          pendingBlock.paw = pawParts.paw;
+          pendingBlock.pawoshi = pawParts.pawoshi;
           pendingBlock.raw = pawParts.raw;
           pendingBlocks.push(pendingBlock);
 
@@ -1293,8 +1293,8 @@ const sendSharedAccountBalanceToFirstAccountWithNoTransactions = async (ix) => {
   let message = undefined;
   try {
     mainConsole.debug('sendSharedAccountBalanceToFirstAccountWithNoTransactions', sendFromSeed, sendFromSeedIx, sendToAccount, sendAmount);
-    const messageSuffix = await bananojsErrorTrap.sendWithdrawalFromSeed(sendFromSeed, sendFromSeedIx, sendToAccount, sendAmount);
-    message = `Banano Tx Hash ${messageSuffix}`;
+    const messageSuffix = await pawjsErrorTrap.sendWithdrawalFromSeed(sendFromSeed, sendFromSeedIx, sendToAccount, sendAmount);
+    message = `Paw Tx Hash ${messageSuffix}`;
   } catch (error) {
     message = 'error:' + JSON.stringify(error);
   }

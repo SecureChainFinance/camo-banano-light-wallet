@@ -1,7 +1,7 @@
 'use strict';
 
 // modules
-const bananojsErrorTrap = require('./bananojs-error-trap-util.js');
+const pawjsErrorTrap = require('./pawjs-error-trap-util.js');
 
 const backgroundUtil = require('./background-util.js');
 // constants
@@ -10,7 +10,7 @@ const backgroundUtil = require('./background-util.js');
 
 // functions
 const setAccountDataFromSeed = async (rpcUrl, seed, accountData) => {
-  bananojsErrorTrap.setBananodeApiUrl(rpcUrl);
+  pawjsErrorTrap.setBananodeApiUrl(rpcUrl);
   let hasMoreHistoryOrPending = true;
   let seedIx = 0;
   accountData.length = 0;
@@ -19,13 +19,13 @@ const setAccountDataFromSeed = async (rpcUrl, seed, accountData) => {
     // console.log('setAccountDataFromSeed', seedIx);
     const accountDataElt = {};
     accountDataElt.seedIx = seedIx;
-    accountDataElt.privateKey = await bananojsErrorTrap.getPrivateKey(seed, accountDataElt.seedIx);
+    accountDataElt.privateKey = await pawjsErrorTrap.getPrivateKey(seed, accountDataElt.seedIx);
     if (accountDataElt.privateKey) {
-      accountDataElt.publicKey = await bananojsErrorTrap.getPublicKey(accountDataElt.privateKey);
-      accountDataElt.account = bananojsErrorTrap.getAccount(accountDataElt.publicKey);
+      accountDataElt.publicKey = await pawjsErrorTrap.getPublicKey(accountDataElt.privateKey);
+      accountDataElt.account = pawjsErrorTrap.getAccount(accountDataElt.publicKey);
       accountData.push(accountDataElt);
-      const accountHistory = await bananojsErrorTrap.getAccountHistory(accountDataElt.account, 1);
-      const accountPending = await bananojsErrorTrap.getAccountsPending([accountDataElt.account], 1);
+      const accountHistory = await pawjsErrorTrap.getAccountHistory(accountDataElt.account, 1);
+      const accountPending = await pawjsErrorTrap.getAccountsPending([accountDataElt.account], 1);
       accountDataElt.hasPending = false;
       if (accountPending) {
         if (accountPending.blocks) {

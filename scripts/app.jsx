@@ -458,10 +458,10 @@ class App extends React.Component {
               <td className="valign_top no_border no_padding">
                 <table className="w590px no_border no_padding">
                   <tbody>
-                    <tr id="camo-banano-branding" className="no_border no_padding">
+                    <tr id="camo-paw-branding" className="no_border no_padding">
                       <td className="h225px w500px no_border no_padding">
                         <div className="branding_container">
-                          <a href="https://banano.cc/" onClick={(e) => onLinkClick(e)}>
+                          <a href="https://paw.digital/" onClick={(e) => onLinkClick(e)}>
                             <img className="h200px w200px no_border no_padding" src="artwork/cfccamobanano.png" />
                           </a>
                         </div>
@@ -673,8 +673,8 @@ class App extends React.Component {
                                         {item.hash}
                                       </a>
                                     </td>
-                                    <td className="no_border no_padding">{item.banano}</td>
-                                    <td className="no_border no_padding">{item.banoshi}</td>
+                                    <td className="no_border no_padding">{item.paw}</td>
+                                    <td className="no_border no_padding">{item.pawoshi}</td>
                                     <td className="no_border no_padding">{item.raw}</td>
                                     <td className="no_border no_padding">
                                       <DisableableButton name="receive" onClick={(e) => app.receivePending(item.hash, item.seedIx)} />
@@ -692,7 +692,7 @@ class App extends React.Component {
                                         {item.hash}
                                       </a>
                                     </td>
-                                    <td className="no_border no_padding">{item.banano}</td>
+                                    <td className="no_border no_padding">{item.paw}</td>
                                     <td className="no_border no_padding">{item.banoshi}</td>
                                     <td className="no_border no_padding">{item.raw}</td>
                                     <td className="no_border no_padding">
@@ -725,8 +725,8 @@ class App extends React.Component {
                                         {item.hash}
                                       </a>
                                     </td>
-                                    <td className="no_border no_padding">{item.banano}</td>
-                                    <td className="no_border no_padding">{item.banoshi}</td>
+                                    <td className="no_border no_padding">{item.paw}</td>
+                                    <td className="no_border no_padding">{item.pawoshi}</td>
                                     <td className="no_border no_padding">{item.raw}</td>
                                     <td className="no_border no_padding">
                                       <DisableableButton
@@ -747,8 +747,8 @@ class App extends React.Component {
                                         {item.hash}
                                       </a>
                                     </td>
-                                    <td className="no_border no_padding">{item.banano}</td>
-                                    <td className="no_border no_padding">{item.banoshi}</td>
+                                    <td className="no_border no_padding">{item.paw}</td>
+                                    <td className="no_border no_padding">{item.pawoshi}</td>
                                     <td className="no_border no_padding">{item.raw}</td>
                                     <td className="no_border no_padding">
                                       <DisableableButton
@@ -1035,7 +1035,7 @@ class App extends React.Component {
                           </a>
                         </div>
                         <hr />
-                        <Localization name="selectFileWithAccountAndAmountOfBananos" />
+                        <Localization name="selectFileWithAccountAndAmountOfPaws" />
                         <br />
                         <input id="exportExampleWorkbookFileDialog" type="file" />
                       </td>

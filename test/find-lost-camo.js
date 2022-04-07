@@ -1,6 +1,6 @@
 'use strict';
 // libraries
-const bananojs = require('@bananocoin/bananojs');
+const pawjs = require('@paw-digital/pawjs');
 const chai = require('chai');
 
 // modules
@@ -19,7 +19,7 @@ const expect = chai.expect;
 const Conf = require('conf');
 
 const conf = new Conf({
-  projectName: 'camo-banano-light-wallet',
+  projectName: 'camo-paw-light-wallet',
   configName: 'cleartext-config',
   clearInvalidConfig: false,
 });
@@ -48,10 +48,10 @@ describe('find lost camo', async () => {
       if (accountDataElt.account == fromAccount) {
         console.log('accountDataElt', accountDataElt);
         const seedIx = accountDataElt.seedIx;
-        const fromPrivateKey = bananojs.bananoUtil.getPrivateKey(seed, seedIx);
-        const toPublicKey = bananojs.bananoUtil.getAccountPublicKey(toAccount);
-        const bananodeApi = bananojs.bananodeApi;
-        const sharedSecret = await bananojs.camoUtil.getSharedSecretFromRepresentative( bananodeApi, fromPrivateKey, toPublicKey );
+        const fromPrivateKey = pawjs.pawUtil.getPrivateKey(seed, seedIx);
+        const toPublicKey = pawjs.pawUtil.getAccountPublicKey(toAccount);
+        const pawnodeApi = pawjs.pawnodeApi;
+        const sharedSecret = await pawjs.camoUtil.getSharedSecretFromRepresentative( pawnodeApi, fromPrivateKey, toPublicKey );
         console.log('sharedSecret', sharedSecret);
         const sharedSecretAccountData = [];
         await accountUtil.setAccountDataFromSeed(rpcUrl, sharedSecret, sharedSecretAccountData);

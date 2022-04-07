@@ -1,7 +1,7 @@
 'use strict';
 // modules
-const bananojs = require('@bananocoin/bananojs');
-const bananojsHw = require('@bananocoin/bananojs-hw');
+const pawjs = require('@paw-digital/pawjs');
+const pawjsHw = require('@paw-digital/pawjs-hw');
 
 const mainConsoleLib = require('console');
 
@@ -9,7 +9,7 @@ const mainConsoleLib = require('console');
 const mainConsole = new mainConsoleLib.Console(process.stdout, process.stderr);
 mainConsole.debug = () => {};
 
-const ERROR_URL = 'https://bananojs.coranos.cc/api';
+const ERROR_URL = 'https://pawjs.coranos.cc/api';
 
 // variables
 let url = ERROR_URL;
@@ -29,10 +29,10 @@ const setApp = (_app) => {
   app = _app;
 };
 
-const setBananodeApiUrl = (rpcUrl) => {
+const setPawnodeApiUrl = (rpcUrl) => {
   if (rpcUrl) {
     url = rpcUrl;
-    return bananojs.setBananodeApiUrl(rpcUrl);
+    return pawjs.setPawnodeApiUrl(rpcUrl);
   } else {
     throw Error('rpcUrl is undefined or null.');
   }
@@ -43,7 +43,7 @@ const getAccountHistory = async (account, count, head, raw) => {
     if (isErrorUrl()) {
       throw Error('getAccountHistory');
     }
-    return await bananojs.getAccountHistory(account, count, head, raw);
+    return await pawjs.getAccountHistory(account, count, head, raw);
   } catch (error) {
     app.showAlert('error getting account history:' + error.message);
     return [];
@@ -57,9 +57,9 @@ const getPrivateKey = async (seed, seedIx) => {
     }
     // mainConsole.trace('getting account history', 'seedIx', seedIx);
     if (useLedgerFlag) {
-      return await bananojsHw.getLedgerAccountSigner(seedIx);
+      return await pawjsHw.getLedgerAccountSigner(seedIx);
     } else {
-      return bananojs.getPrivateKey(seed, seedIx);
+      return pawjs.getPrivateKey(seed, seedIx);
     }
   } catch (error) {
     // mainConsole.trace('error getting account history', 'seedIx', seedIx, error.message);
@@ -69,15 +69,15 @@ const getPrivateKey = async (seed, seedIx) => {
 };
 
 const getPublicKey = async (privateKey) => {
-  return await bananojs.getPublicKey(privateKey);
+  return await pawjs.getPublicKey(privateKey);
 };
 
 const getAccount = (publicKey) => {
-  return bananojs.getBananoAccount(publicKey);
+  return pawjs.getPawAccount(publicKey);
 };
 
-const getRawStrFromBananoStr = (amountBananos) => {
-  return bananojs.getRawStrFromBananoStr(amountBananos);
+const getRawStrFromPawStr = (amountPaws) => {
+  return pawjs.getRawStrFromPawStr(amountPaws);
 };
 
 const getAccountsPending = async (account, count, source) => {
@@ -85,7 +85,7 @@ const getAccountsPending = async (account, count, source) => {
     if (isErrorUrl()) {
       throw Error('getAccountsPending');
     }
-    return await bananojs.getAccountsPending(account, count, source);
+    return await pawjs.getAccountsPending(account, count, source);
   } catch (error) {
     app.showAlert('error getting account pending:' + error.message);
     return [];
@@ -93,23 +93,23 @@ const getAccountsPending = async (account, count, source) => {
 };
 
 const getAccountPublicKey = (account) => {
-  return bananojs.getAccountPublicKey(account);
+  return pawjs.getAccountPublicKey(account);
 };
 
 const getCamoAccount = (camoPublicKey) => {
-  return bananojs.getCamoAccount(camoPublicKey);
+  return pawjs.getCamoAccount(camoPublicKey);
 };
 
 const getCamoPublicKey = (privateKey) => {
-  return bananojs.getCamoPublicKey(privateKey);
+  return pawjs.getCamoPublicKey(privateKey);
 };
 
-const changeBananoRepresentativeForSeed = async (seed, seedIx, representative) => {
+const changePawRepresentativeForSeed = async (seed, seedIx, representative) => {
   try {
     if (isErrorUrl()) {
-      throw Error('changeBananoRepresentativeForSeed');
+      throw Error('changePawRepresentativeForSeed');
     }
-    return await bananojs.changeBananoRepresentativeForSeed(seed, seedIx, representative);
+    return await pawjs.changePawRepresentativeForSeed(seed, seedIx, representative);
   } catch (error) {
     app.showAlert('error changing rep:' + error.message);
     return;
@@ -121,7 +121,7 @@ const camoSendWithdrawalFromSeed = async (seed, sendFromSeedIx, sendToAccount, s
     if (isErrorUrl()) {
       throw Error('camoSendWithdrawalFromSeed');
     }
-    return await bananojs.camoBananoSendWithdrawalFromSeed(seed, sendFromSeedIx, sendToAccount, sendAmount);
+    return await pawjs.camoPawSendWithdrawalFromSeed(seed, sendFromSeedIx, sendToAccount, sendAmount);
   } catch (error) {
     app.showAlert('error camo send withdrawal:' + error.message);
     return;
@@ -134,20 +134,20 @@ const sendWithdrawalFromSeed = async (seed, sendFromSeedIx, sendToAccount, sendA
       throw Error('sendWithdrawalFromSeed');
     }
     if (useLedgerFlag) {
-      const config = bananojsHw.getConfig();
-      bananojs.bananodeApi.setUrl(config.bananodeUrl);
-      const accountSigner = await bananojsHw.getLedgerAccountSigner(sendFromSeedIx);
+      const config = pawjsHw.getConfig();
+      pawjs.pawnodeApi.setUrl(config.pawnodeUrl);
+      const accountSigner = await pawjsHw.getLedgerAccountSigner(sendFromSeedIx);
       try {
-        const amountRaw = bananojs.getBananoDecimalAmountAsRaw(sendAmount);
-        const response = await bananojs.bananoUtil.sendFromPrivateKey(bananojs.bananodeApi, accountSigner, sendToAccount, amountRaw, config.prefix);
-        console.log('banano sendbanano response', response);
+        const amountRaw = pawjs.getPawDecimalAmountAsRaw(sendAmount);
+        const response = await pawjs.pawUtil.sendFromPrivateKey(pawjs.pawnodeApi, accountSigner, sendToAccount, amountRaw, config.prefix);
+        console.log('paw sendpaw response', response);
         return response;
       } catch (error) {
-        console.log('banano sendbanano error', error.message);
+        console.log('paw sendpaw error', error.message);
         return error.message;
       }
     } else {
-      return await bananojs.sendBananoWithdrawalFromSeed(seed, sendFromSeedIx, sendToAccount, sendAmount);
+      return await pawjs.sendPawWithdrawalFromSeed(seed, sendFromSeedIx, sendToAccount, sendAmount);
     }
   } catch (error) {
     app.showAlert('error send withdrawal:' + error.message);
@@ -155,8 +155,8 @@ const sendWithdrawalFromSeed = async (seed, sendFromSeedIx, sendToAccount, sendA
   }
 };
 
-const getBananoPartsFromRaw = (amount) => {
-  return bananojs.getBananoPartsFromRaw(amount);
+const getPawPartsFromRaw = (amount) => {
+  return pawjs.getPawPartsFromRaw(amount);
 };
 
 const getAccountInfo = async (account, representativeFlag) => {
@@ -164,7 +164,7 @@ const getAccountInfo = async (account, representativeFlag) => {
     if (isErrorUrl()) {
       throw Error('getAccountInfo');
     }
-    return await bananojs.getAccountInfo(account, representativeFlag);
+    return await pawjs.getAccountInfo(account, representativeFlag);
   } catch (error) {
     app.showAlert('error:' + error.message);
     const retval = {};
@@ -178,7 +178,7 @@ const getBlockCount = async () => {
     if (isErrorUrl()) {
       throw Error('getBlockCount');
     }
-    return await bananojs.getBlockCount();
+    return await pawjs.getBlockCount();
   } catch (error) {
     app.showAlert('error get block count:' + error.message);
     const retval = {};
@@ -188,11 +188,11 @@ const getBlockCount = async () => {
 };
 
 const getCamoAccountValidationInfo = (camoAccount) => {
-  return bananojs.getCamoAccountValidationInfo(camoAccount);
+  return pawjs.getCamoAccountValidationInfo(camoAccount);
 };
 
 const getAccountValidationInfo = (banAccount) => {
-  return bananojs.getBananoAccountValidationInfo(banAccount);
+  return pawjs.getPawAccountValidationInfo(banAccount);
 };
 
 const getCamoSharedAccountData = async (seed, seedIx, sendToAccount, sharedSeedIx) => {
@@ -203,7 +203,7 @@ const getCamoSharedAccountData = async (seed, seedIx, sendToAccount, sharedSeedI
     if (useLedgerFlag) {
       app.showAlert('cannot use camo with ledger.');
     } else {
-      return await bananojs.getCamoBananoSharedAccountData(seed, seedIx, sendToAccount, sharedSeedIx);
+      return await pawjs.getCamoPawSharedAccountData(seed, seedIx, sendToAccount, sharedSeedIx);
     }
   } catch (error) {
     app.showAlert('error getting camo shared acount data:' + error.message);
@@ -219,7 +219,7 @@ const camoGetAccountsPending = async (seed, seedIx, sendToAccount, sharedSeedIx,
     if (useLedgerFlag) {
       app.showAlert('cannot use camo with ledger.');
     } else {
-      return await bananojs.camoBananoGetAccountsPending(seed, seedIx, sendToAccount, sharedSeedIx, count);
+      return await pawjs.camoPawGetAccountsPending(seed, seedIx, sendToAccount, sharedSeedIx, count);
     }
   } catch (error) {
     app.showAlert('error get account pending:' + error.message);
@@ -235,7 +235,7 @@ const receiveCamoDepositsForSeed = async (seed, seedIx, sendToAccount, sharedSee
     if (useLedgerFlag) {
       app.showAlert('cannot use camo with ledger.');
     } else {
-      return await bananojs.receiveCamoBananoDepositsForSeed(seed, seedIx, sendToAccount, sharedSeedIx, hash);
+      return await pawjs.receiveCamoPawDepositsForSeed(seed, seedIx, sendToAccount, sharedSeedIx, hash);
     }
   } catch (error) {
     app.showAlert('error receive camo deposit:' + error.message);
@@ -250,22 +250,22 @@ const receiveDepositsForSeed = async (seed, seedIx, representative, hash) => {
     }
 
     if (useLedgerFlag) {
-      const accountSigner = await bananojsHw.getLedgerAccountSigner(seedIx);
+      const accountSigner = await pawjsHw.getLedgerAccountSigner(seedIx);
       const account = accountSigner.getAccount();
-      let representative = await bananojs.bananodeApi.getAccountRepresentative(account);
+      let representative = await pawjs.pawnodeApi.getAccountRepresentative(account);
       if (!(representative)) {
         representative = account;
       }
       try {
-        const config = bananojsHw.getConfig();
-        const response = await bananojs.depositUtil.receive(bananojs.loggingUtil, bananojs.bananodeApi, account, accountSigner, representative, hash, config.prefix);
-        console.log('banano receive response', JSON.stringify(response));
+        const config = pawjsHw.getConfig();
+        const response = await pawjs.depositUtil.receive(pawjs.loggingUtil, pawjs.pawnodeApi, account, accountSigner, representative, hash, config.prefix);
+        console.log('paw receive response', JSON.stringify(response));
         return response;
       } catch (error) {
         console.trace( error);
       }
     } else {
-      return await bananojs.receiveBananoDepositsForSeed(seed, seedIx, representative, hash);
+      return await pawjs.receivePawDepositsForSeed(seed, seedIx, representative, hash);
     }
   } catch (error) {
     app.showAlert('error receive deposit:' + error.message);
@@ -278,7 +278,7 @@ const getLedgerInfo = async () => {
     if (isErrorUrl()) {
       throw Error('getLedgerInfo');
     }
-    return await bananojsHw.getLedgerInfo();
+    return await pawjsHw.getLedgerInfo();
   } catch (error) {
     // mainConsole.trace('getLedgerInfo', error);
     app.showAlert('error getting ledger info:' + error.message);
@@ -292,8 +292,8 @@ const setUseLedgerFlag = (_useLedgerFlag) => {
 
 exports.setUseLedgerFlag = setUseLedgerFlag;
 exports.getLedgerInfo = getLedgerInfo;
-exports.getRawStrFromBananoStr = getRawStrFromBananoStr;
-exports.setBananodeApiUrl = setBananodeApiUrl;
+exports.getRawStrFromPawStr = getRawStrFromPawStr;
+exports.setPawnodeApiUrl = setPawnodeApiUrl;
 exports.getAccountHistory = getAccountHistory;
 exports.getAccountsPending = getAccountsPending;
 exports.getPrivateKey = getPrivateKey;
@@ -307,8 +307,8 @@ exports.getCamoAccount = getCamoAccount;
 exports.getCamoPublicKey = getCamoPublicKey;
 exports.getAccountInfo = getAccountInfo;
 exports.getBlockCount = getBlockCount;
-exports.getBananoPartsFromRaw = getBananoPartsFromRaw;
-exports.changeBananoRepresentativeForSeed = changeBananoRepresentativeForSeed;
+exports.getPawPartsFromRaw = getPawPartsFromRaw;
+exports.changePawRepresentativeForSeed = changePawRepresentativeForSeed;
 exports.camoSendWithdrawalFromSeed = camoSendWithdrawalFromSeed;
 exports.sendWithdrawalFromSeed = sendWithdrawalFromSeed;
 exports.getCamoSharedAccountData = getCamoSharedAccountData;
