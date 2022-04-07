@@ -1,8 +1,8 @@
 {
-  "name": "camo-banano-light-wallet",
+  "name": "camo-paw-light-wallet",
   "version": "1.1.13",
-  "description": "camo banano light wallet",
-  "productName": "camo-banano-light-wallet",
+  "description": "camo paw light wallet",
+  "productName": "camo-paw-light-wallet",
   "main": "index.js",
   "build": {
     "mac": {
@@ -36,20 +36,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BananoCoin/camo-banano-light-wallet.git"
+    "url": "git+https://github.com/SecureChainFinance/camo-paw-light-wallet.git"
   },
   "keywords": [
-    "camo banano wallet"
+    "camo paw wallet"
   ],
   "author": "coranos",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/BananoCoin/camo-banano-light-wallet/issues"
+    "url": "https://github.com/SecureChainFinance/camo-paw-light-wallet/issues"
   },
-  "homepage": "https://github.com/BananoCoin/camo-banano-light-wallet#readme",
+  "homepage": "https://github.com/SecureChainFinance/camo-paw-light-wallet#readme",
   "dependencies": {
-    "@bananocoin/bananojs": "^2.5.7",
-    "@bananocoin/bananojs-hw": "^1.2.4",
+    "@paw-digital/pawjs": "^2.5.7",
+    "@paw-digital/pawjs-hw": "^1.2.4",
     "@electron/remote": "^2.0.8",
     "babel-polyfill": "^6.26.0",
     "check-node-version": "^4.2.1",
