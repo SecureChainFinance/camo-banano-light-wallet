@@ -9,7 +9,7 @@ const mainConsoleLib = require('console');
 const Store = require('electron-store');
 const Conf = require('conf');
 
-const bananojsErrorTrap = require('./util/bananojs-error-trap-util.js');
+const bananojsErrorTrap = require('./util/pawjs-error-trap-util.js');
 const accountUtil = require('./util/account-util.js');
 const backgroundUtil = require('./util/background-util.js');
 const sendToListUtil = require('./util/send-to-list-util.js');
@@ -33,9 +33,9 @@ const ACCOUNT_HISTORY_SIZE = 20;
 
 /** networks */
 const NETWORKS = [{
-  NAME: 'Kalium Mainnet',
-  EXPLORER: 'https://creeper.banano.cc/',
-  RPC_URL: 'https://kaliumapi.appditto.com/api',
+  NAME: 'PAW Mainnet',
+  EXPLORER: 'https://tracker.paw.digital/',
+  RPC_URL: 'https://rpc.paw.digital',
 },
 // , {
 //   NAME: 'Error Testnet',
@@ -114,7 +114,7 @@ mainConsole.log('Console Logging Enabled.');
 
 const getCleartextConfig = () => {
   const conf = new Conf({
-    projectName: 'camo-banano-light-wallet',
+    projectName: 'camo-paw-light-wallet',
     configName: 'cleartext-config',
     clearInvalidConfig: false,
   });
@@ -170,9 +170,9 @@ const init = async () => {
   exampleWorkbookBase64 = await sendToListUtil.createExampleWorkbookBase64();
 
   /* eslint-disable no-invalid-this */
-  bananojsErrorTrap.setApp(this);
+  pawjsErrorTrap.setApp(this);
   /* eslint-enable no-invalid-this */
-  bananojsErrorTrap.setBananodeApiUrl(getRpcUrl());
+  pawjsErrorTrap.setBananodeApiUrl(getRpcUrl());
   await requestLedgerDeviceInfo();
 
   setImmediate(autoRecieve);
@@ -447,12 +447,12 @@ const sendAmountToAccount = async () => {
 
     const sendToAccount = sendToAccountElt.value;
     if (useCamo) {
-      const camoAccountValid = bananojsErrorTrap.getCamoAccountValidationInfo(sendToAccount);
+      const camoAccountValid = pawjsErrorTrap.getCamoAccountValidationInfo(sendToAccount);
       if (!camoAccountValid.valid) {
         throw new Error(camoAccountValid.message);
       }
     } else {
-      const accountValid = bananojsErrorTrap.getAccountValidationInfo(sendToAccount);
+      const accountValid = pawjsErrorTrap.getAccountValidationInfo(sendToAccount);
       if (!accountValid.valid) {
         throw new Error(accountValid.message);
       }
@@ -473,10 +473,10 @@ const sendAmountToAccount = async () => {
     } else {
       try {
         if (useCamo) {
-          const messageSuffix = await bananojsErrorTrap.camoSendWithdrawalFromSeed(seed, sendFromSeedIx, sendToAccount, sendAmount);
+          const messageSuffix = await pawjsErrorTrap.camoSendWithdrawalFromSeed(seed, sendFromSeedIx, sendToAccount, sendAmount);
           message = `Camo Tx Hash ${messageSuffix}`;
         } else {
-          const messageSuffix = await bananojsErrorTrap.sendWithdrawalFromSeed(seed, sendFromSeedIx, sendToAccount, sendAmount);
+          const messageSuffix = await pawjsErrorTrap.sendWithdrawalFromSeed(seed, sendFromSeedIx, sendToAccount, sendAmount);
           message = `Banano Tx Hash ${messageSuffix}`;
         }
         clearSendData();
@@ -514,7 +514,7 @@ const requestTransactionHistory = async () => {
         accountDataIx, 'of', accountData.length, '.');
     const accountDataElt = accountData[accountDataIx];
     const account = accountDataElt.account;
-    const accountHistory = await bananojsErrorTrap.getAccountHistory(account, ACCOUNT_HISTORY_SIZE);
+    const accountHistory = await pawjsErrorTrap.getAccountHistory(account, ACCOUNT_HISTORY_SIZE);
     const parsedTransactionHistoryByAccountElt = {};
     parsedTransactionHistoryByAccountElt.account = account;
     parsedTransactionHistoryByAccount.push(parsedTransactionHistoryByAccountElt);
@@ -524,9 +524,9 @@ const requestTransactionHistory = async () => {
         const parsedTransactionHistoryElt = {};
         parsedTransactionHistoryElt.type = historyElt.type;
         parsedTransactionHistoryElt.n = ix + 1;
-        parsedTransactionHistoryElt.value = bananojsErrorTrap.getBananoPartsFromRaw(historyElt.amount).banano;
+        parsedTransactionHistoryElt.value = pawjsErrorTrap.getBananoPartsFromRaw(historyElt.amount).banano;
         parsedTransactionHistoryElt.txHash = historyElt.hash;
-        parsedTransactionHistoryElt.txDetailsUrl = 'https://creeper.banano.cc/explorer/block/' + historyElt.hash;
+        parsedTransactionHistoryElt.txDetailsUrl = 'https://tracker.paw.digital/explorer/block/' + historyElt.hash;
         parsedTransactionHistoryByAccount.push(parsedTransactionHistoryElt);
       });
     }
@@ -549,7 +549,7 @@ const requestBalanceAndRepresentative = async () => {
         accountDataIx, 'of', accountData.length, '.');
     const accountDataElt = accountData[accountDataIx];
     const account = accountDataElt.account;
-    const accountInfo = await bananojsErrorTrap.getAccountInfo(account, true);
+    const accountInfo = await pawjsErrorTrap.getAccountInfo(account, true);
     balanceStatus = JSON.stringify(accountInfo);
     mainConsole.debug('requestBalanceAndRepresentative', accountInfo);
     if (accountInfo) {
@@ -559,7 +559,7 @@ const requestBalanceAndRepresentative = async () => {
         accountDataElt.balance = undefined;
       } else {
         balanceStatus = 'Success';
-        accountDataElt.balance = bananojsErrorTrap.getBananoPartsFromRaw(accountInfo.balance).banano;
+        accountDataElt.balance = pawjsErrorTrap.getBananoPartsFromRaw(accountInfo.balance).banano;
         accountDataElt.representative = accountInfo.representative;
         totalBalance += parseInt(accountDataElt.balance);
       }
